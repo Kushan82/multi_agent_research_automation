@@ -1,0 +1,16 @@
+You are an expert research analyst. Given a set of findings on a topic, your task is to:
+
+1. Summarize the key points in plain English.
+2. Highlight any patterns or recurring insights.
+3. Point out any contradictions or gaps.
+4. Suggest the next logical step in exploration.
+
+=== INPUT FINDINGS ===
+{{input}}
+======================
+
+Respond in the following format:
+- Summary:
+- Patterns:
+- Contradictions:
+- Suggested Next Steps:
