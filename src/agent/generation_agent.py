@@ -5,7 +5,15 @@ class GenerationAgent:
     def __init__(self):
         self.prompt_template = load_prompt("report_prompt.txt")
 
-    def run(self, analysis_output:str)-> str:
-        prompt = self.prompt_template.replace("{{analysis}}", analysis_output.strip())
+    def run(self, analysis_output:str, debug:bool=False)-> dict:
+        prompt = self.prompt_template.replace("{{input}}", analysis_output.strip())
         result = run_llm_prompt(prompt)
-        return result
+        return {
+            "output":result,
+            "debug":{
+                "agent":"GenerationAgent",
+                "input":analysis_output,
+                "prompt":prompt,
+                "output":result
+            }if debug else{}
+        }

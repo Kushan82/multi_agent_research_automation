@@ -5,7 +5,15 @@ class SearchAgent:
     def __init__(self):
         self.prompt_template = load_prompt("search_prompt.txt")
     
-    def run(self,query:str)-> str:
-        prompt= self.prompt_template.replace("{{query}}", query)
+    def run(self,query:str, debug:bool= False)-> dict:
+        prompt= self.prompt_template.replace("{{input}}", query.strip())
         result= run_llm_prompt(prompt)
-        return result
+        return {
+            "output":result,
+            "debug":{
+                "agent":"SearchAgent",
+                "input":query,
+                "prompt":prompt,
+                "output":result
+            }if debug else{}
+        }
