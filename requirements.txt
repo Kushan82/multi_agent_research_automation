@@ -1,0 +1,32 @@
+langchain
+langgraph
+crewai
+fastapi
+pandas
+faiss-cpu
+sentence-transformers
+pytest
+pytest-asyncio
+loguru
+rich
+python-dotenv
+pydantic
+pyyaml
+wikipedia
+arxiv
+tavily-python  # Tavily search API
+requests
+beautifulsoup4
+jinja2
+streamlit
+chromadb
+groq
+langchain-community
+langchain-experimental
+python-dotenv
+uvicorn
+httpx
+langchain-groq
+langchain-tavily
+
+-e .
