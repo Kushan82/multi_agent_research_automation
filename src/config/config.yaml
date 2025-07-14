@@ -1,0 +1,4 @@
+tools:
+  enable_wikipedia: true
+  enable_tavily: true
+  enable_arxiv: true
