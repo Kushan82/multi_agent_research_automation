@@ -38,9 +38,9 @@ def run_tool_agent(state: ResearchState) -> dict:
 
 def run_analysis_agent(state: ResearchState) -> dict:
     combined_input = (
-        "Search Summary:\n" + state["search_output"] +
-        "\n\nExternal Sources:\n" + state.get("tool_output", "")
-    )
+    "🔎 Search Summary:\n" + state["search_output"] +
+    "\n\n📚 External Sources:\n" + state.get("tool_output", "")
+)
     result = analysis_agent.run(combined_input, debug=state.get("debug", False))
     return {
         "analysis_output": result["output"],
@@ -48,10 +48,13 @@ def run_analysis_agent(state: ResearchState) -> dict:
     }
 
 def run_generation_agent(state: ResearchState) -> dict:
-    combined_input = state["analysis_output"] + "\n\n" + state.get("tool_output", "")
+    combined_input = (
+        "Insights:\n" + state["analysis_output"] +
+        "\n\nReferenced Sources:\n" + state.get("tool_output", "")
+    )
     result = generation_agent.run(combined_input, debug=state.get("debug", False))
     return{"final_report":result["output"],
-           "analysis_debug":result["debug"]
+           "generation_debug":result["debug"]
            }
 
 def build_graph():

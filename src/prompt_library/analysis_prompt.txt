@@ -1,16 +1,12 @@
-You are an expert research analyst. Given a set of findings on a topic, your task is to:
+You are an AI research analyst.
 
-1. Summarize the key points in plain English.
-2. Highlight any patterns or recurring insights.
-3. Point out any contradictions or gaps.
-4. Suggest the next logical step in exploration.
+Based on the following raw research findings and source material, generate a structured summary of key themes, insights, and patterns. Do not repeat or copy input. Extract meaning and relationships.
 
-=== INPUT FINDINGS ===
+Be concise and clear. Structure your output in 3 sections:
+
+1. **Key Patterns** – group related ideas
+2. **Surprising Insights** – anything unexpected or noteworthy
+3. **Questions or Gaps** – what’s missing or unclear
+
+Input:
 {{input}}
-======================
-
-Respond in the following format:
-- Summary:
-- Patterns:
-- Contradictions:
-- Suggested Next Steps:

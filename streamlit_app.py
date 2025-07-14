@@ -93,6 +93,17 @@ if submitted and query.strip():
 
         with st.expander("📝 Generation Agent Prompt"):
             st.code(result.get("generation_debug", {}).get("prompt", "No debug data"))
+        with st.expander("📤 Analysis Input to Generation Agent"):
+            debug_input = result.get("analysis_debug", {}).get("input", "")
+
+            if isinstance(debug_input, str):
+                st.code(debug_input[:2000])
+            else:
+                st.warning("⚠️ Could not display analysis input (not a string).")
+        with st.expander("📤 Generation Input (Raw Text)"):
+            st.code(result.get("generation_debug", {}).get("input", "")[:2000])
+
+
 
 else:
     st.info("Enter a topic above and click 'Run Agents' to start.")

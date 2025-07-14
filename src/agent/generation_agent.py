@@ -3,7 +3,7 @@ from utils.prompt_loader import load_prompt
 
 class GenerationAgent:
     def __init__(self):
-        self.prompt_template = load_prompt("report_prompt.txt")
+        self.prompt_template = load_prompt("generation_prompt.txt")
 
     def run(self, analysis_output:str, debug:bool=False)-> dict:
         prompt = self.prompt_template.replace("{{input}}", analysis_output.strip())

@@ -12,7 +12,7 @@ class AnalysisAgent:
             "output":result,
             "debug":{
                 "agent":"AnalysisAgent",
-                "input":input,
+                "input":search_output.strip(),
                 "prompt":prompt,
                 "output":result
             }if debug else{}
