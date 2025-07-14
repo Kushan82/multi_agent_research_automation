@@ -2,7 +2,11 @@ from langgraph.graph import StateGraph,END
 from agent.search_agent import SearchAgent
 from agent.analysis_agent import AnalysisAgent
 from agent.generation_agent import GenerationAgent
+from agent.tool_agent import ToolAgent
 from typing import TypedDict
+from agent.tool_agent import ToolAgent
+
+
 
 class ResearchState(TypedDict):
     query:str
@@ -10,6 +14,7 @@ class ResearchState(TypedDict):
     search_output:str
     analysis_output:str
     final_report:str
+    tool_output:str
     search_debug: dict
     analysis_debug: dict
     generation_debug: dict
@@ -17,6 +22,7 @@ class ResearchState(TypedDict):
 search_agent= SearchAgent()
 analysis_agent= AnalysisAgent()
 generation_agent= GenerationAgent()
+tool_agent= ToolAgent()
 
 def run_search_agent(state: ResearchState) -> dict:
     result = search_agent.run(state["query"],debug=state.get("debug",False))
@@ -25,26 +31,39 @@ def run_search_agent(state: ResearchState) -> dict:
         "search_debug": result["debug"]
         }
 
+def run_tool_agent(state: ResearchState) -> dict:
+    tool_output = tool_agent.run(state["query"])
+    return {"tool_output": tool_output}
+
+
 def run_analysis_agent(state: ResearchState) -> dict:
-    result = analysis_agent.run(state["search_output"],debug=state.get("debug",False))
-    return{"analysis_output":result["output"],
-           "analysis_debug":result["output"]
-           }
+    combined_input = (
+        "Search Summary:\n" + state["search_output"] +
+        "\n\nExternal Sources:\n" + state.get("tool_output", "")
+    )
+    result = analysis_agent.run(combined_input, debug=state.get("debug", False))
+    return {
+        "analysis_output": result["output"],
+        "analysis_debug": result["debug"]
+    }
 
 def run_generation_agent(state: ResearchState) -> dict:
-    result = generation_agent.run(state["analysis_output"],debug=state.get("debug",False))
+    combined_input = state["analysis_output"] + "\n\n" + state.get("tool_output", "")
+    result = generation_agent.run(combined_input, debug=state.get("debug", False))
     return{"final_report":result["output"],
-           "analysis_debug":result["output"]
+           "analysis_debug":result["debug"]
            }
 
 def build_graph():
     graph_builder = StateGraph(ResearchState)
     graph_builder.add_node("search",run_search_agent)
+    graph_builder.add_node("tool_agent", run_tool_agent)
     graph_builder.add_node("analyse",run_analysis_agent)
     graph_builder.add_node("generate",run_generation_agent)
 
     graph_builder.set_entry_point("search")
-    graph_builder.add_edge("search", "analyse")
+    graph_builder.add_edge("search","tool_agent")
+    graph_builder.add_edge("tool_agent", "analyse")
     graph_builder.add_edge("analyse", "generate")
     graph_builder.add_edge("generate", END)
 

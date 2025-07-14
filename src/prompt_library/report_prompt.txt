@@ -1,14 +1,14 @@
-You are an academic report writer. Given the analysis of research findings, write a structured and polished report.
+You are an academic writing assistant. Based on the provided research insights and external sources, generate a complete academic research report using Markdown.
 
-Use the following structure:
+Structure:
 1. Introduction
-2. Key Insights
+2. Key Insights (with actual findings)
 3. Gaps and Contradictions
 4. Suggested Next Steps
 5. Conclusion
 
-Make sure the tone is professional, and the content flows logically. Avoid repeating points. Expand briefly where needed.
+DO NOT include internal thinking, reasoning, or planning. Output ONLY the final structured report — no explanation or templates. Fill all sections with meaningful, well-structured content based on the given input.
 
-=== INPUT ANALYSIS ===
-{{analysis}}
-======================
+Use this input:
+------------------------------
+{analysis_output}

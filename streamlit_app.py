@@ -52,6 +52,10 @@ if submitted and query.strip():
     #st.write("DEBUG full state:", result)
     st.markdown(result["final_report"])
 
+    # Tool Agent Output
+    with st.expander("🧰 Tool Agent Output"):
+        st.markdown(result.get("tool_output", "No tool data available."))
+
     st.markdown("#### 📁 Export this report:")
     # Prepare exportable content
     report_text = result["final_report"]
