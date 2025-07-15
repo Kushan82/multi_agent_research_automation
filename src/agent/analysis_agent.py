@@ -1,7 +1,7 @@
 from tools.groq_llm import run_llm_prompt
 from utils.prompt_loader import load_prompt
 from utils.logger import setup_logger
-
+import time
 logger = setup_logger("AnalysisAgent")
 
 class AnalysisAgent:
@@ -9,6 +9,7 @@ class AnalysisAgent:
         self.prompt_template=  load_prompt("analysis_prompt.txt")
 
     def run(self,search_output:str, debug:bool=False)->dict:
+        start = time.time()
         logger.info("Analysing search output: %s",search_output)
         prompt = self.prompt_template.replace("{{input}}",search_output.strip())
         try:
@@ -17,6 +18,8 @@ class AnalysisAgent:
         except Exception as e:
             logger.error("Analysis Agent failed:%s",str(e))
             result = "AnalysisAgent failed"
+        elapsed = time.time() - start
+        logger.warning("⏱️ AnalysisAgent completed in %.2f seconds", elapsed)
         return {
             "output":result,
             "debug":{

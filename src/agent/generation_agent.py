@@ -1,13 +1,14 @@
 from tools.groq_llm import run_llm_prompt
 from utils.prompt_loader import load_prompt
 from utils.logger import setup_logger
-
+import time
 logger = setup_logger("GenerationAgent")
 class GenerationAgent:
     def __init__(self):
         self.prompt_template = load_prompt("generation_prompt.txt")
 
     def run(self, analysis_output:str, debug:bool=False)-> dict:
+        start = time.time()
         logger.info("Generation Agent output %s",analysis_output)
         prompt = self.prompt_template.replace("{{input}}", analysis_output.strip())
         try:
@@ -16,6 +17,8 @@ class GenerationAgent:
         except Exception as e:
             logger.error("GenerationAgent failed %s",str(e))
             result=("GenerationAgent failed")
+        elapsed = time.time() - start
+        logger.warning("⏱️ GenerationAgent completed in %.2f seconds", elapsed)
         return {
             "output":result,
             "debug":{
