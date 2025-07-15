@@ -2,6 +2,8 @@ import streamlit as st
 import os
 import sys
 import io
+from dotenv import load_dotenv
+load_dotenv()
 
 sys.path.insert(0,os.path.abspath("src"))
 from workflow.research_flow import research_workflow
