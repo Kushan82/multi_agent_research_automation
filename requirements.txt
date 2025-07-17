@@ -1,32 +1,40 @@
+# Core packages
 langchain
 langgraph
 crewai
 fastapi
 pandas
-faiss-cpu
+
+# Vector and Embedding
+faiss-cpu==1.7.4
 sentence-transformers
-pytest
-pytest-asyncio
-loguru
-rich
+
+# UI & App
+streamlit
+uvicorn
+httpx
+
+# Tools & Utilities
 python-dotenv
 pydantic
 pyyaml
-wikipedia
+wikipedia-api
 arxiv
-tavily-python  # Tavily search API
+tavily-python
 requests
 beautifulsoup4
 jinja2
-streamlit
-chromadb
-groq
+
+# Logging & Dev
+loguru
+rich
+pytest
+pytest-asyncio
+
+# Langchain integrations
 langchain-community
 langchain-experimental
-python-dotenv
-uvicorn
-httpx
 langchain-groq
 langchain-tavily
 
--e .
+# -e .

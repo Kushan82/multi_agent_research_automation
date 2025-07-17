@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
+
 [tool.setuptools]
-packages = ["agent", "config", "memory", "workflow", "prompt_library"]
+packages = ["agent", "config", "workflow", "prompt_library", "tools", "utils","notebook"]
 package-dir = {"" = "src"}

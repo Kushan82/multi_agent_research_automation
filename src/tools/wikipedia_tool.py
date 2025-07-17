@@ -1,8 +1,15 @@
-import wikipedia
+import wikipediaapi
 
 def search_wikipedia(query: str) -> str:
     try:
-        summary = wikipedia.summary(query, sentences=3)
-        return f"📚 Wikipedia:\n{summary}"
+        wiki = wikipediaapi.Wikipedia(
+            language='en',
+            user_agent='MultiAgentResearchBot/1.0'
+        )
+        page = wiki.page(query)
+        if not page.exists():
+            return f"Wikipedia: No page found for '{query}'"
+        summary = page.summary[:500] + "..."  # Trim for brevity
+        return f"Wikipedia:\n{summary}"
     except Exception as e:
-        return f"❌ Wikipedia search failed: {str(e)}"
+        return f"Wikipedia search failed: {str(e)}"

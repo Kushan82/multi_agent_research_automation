@@ -4,7 +4,9 @@ __pycache__/
 *.pyd
 *.log
 .env
-logs/
-.vscode/
-.venv/
-.idea/
+.venv
+.git
+.idea
+*.zip
+*.tar
+*.gz
