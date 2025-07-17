@@ -1,34 +1,33 @@
-# Core packages - Alternative pinned versions
-langchain==0.2.16
-langchain-core==0.2.38
-langchain-community==0.2.16
-langgraph==0.2.28
-crewai
-fastapi
-pandas
+# LangChain modular packages
+langchain-core>=0.3.15
+langchain-community>=0.3.15
+langgraph>=0.3.0   
+langchain-chroma
+langchain-huggingface
+langchain-experimental
+langchain-groq
+langchain-tavily
 
-# Vector and Embedding
+# Embeddings & Vector Stores
 faiss-cpu==1.7.4
 sentence-transformers
 chromadb
-langchain-chroma
 
-# UI & App
+# UI & Backend
 streamlit
 uvicorn
 httpx
+fastapi
 
-# Document Processing
+# NLP & Parsing
 pypdf
 python-docx
 unstructured
 tiktoken
-
-# Enhanced text processing
 spacy
 nltk
 
-# Tools & Utilities
+# Utilities
 python-dotenv
 pydantic
 pyyaml
@@ -44,10 +43,3 @@ loguru
 rich
 pytest
 pytest-asyncio
-
-# Langchain integrations
-langchain-experimental
-langchain-groq
-langchain-tavily
-
-# -e .

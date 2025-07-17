@@ -1,11 +1,11 @@
 import os
 from typing import List, Dict, Any, Optional
-from langchain.schema import Document
-from langchain_community.embeddings import SentenceTransformerEmbeddings
-from langchain_community.vectorstores import Chroma
-from langchain.vectorstores.base import VectorStore
+from langchain_core.documents import Document
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
+from langchain_core.vectorstores import VectorStore  # if used generically
 import chromadb
-from chromadb.config import Settings
+from chromadb import HttpClient
 from utils.logger import setup_logger
 
 logger = setup_logger("VectorStore")
@@ -13,9 +13,7 @@ logger = setup_logger("VectorStore")
 class VectorStoreManager:
     def __init__(self, config: Dict[str, Any]):
         self.config = config
-        self.embedding_model = SentenceTransformerEmbeddings(
-            model_name=config.get("embedding_model", "all-MiniLM-L6-v2")
-        )
+        self.embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         self.vector_store = None
         self._initialize_vector_store()
     
@@ -25,18 +23,14 @@ class VectorStoreManager:
             persist_directory = self.config.get("persist_directory", "./data/vector_store")
             os.makedirs(persist_directory, exist_ok=True)
             
-            client_settings = Settings(
-                chroma_db_impl="duckdb+parquet",
-                persist_directory=persist_directory,
-                anonymized_telemetry=False
-            )
-            
+            client = chromadb.PersistentClient(path=persist_directory)
+
             self.vector_store = Chroma(
+                client=client,
                 collection_name=self.config.get("collection_name", "research_documents"),
-                embedding_function=self.embedding_model,
-                client_settings=client_settings,
-                persist_directory=persist_directory
+                embedding_function=self.embedding_model
             )
+
             
             logger.info("Vector store initialized successfully")
             
@@ -74,8 +68,7 @@ class VectorStoreManager:
         """Search for similar documents"""
         try:
             # Perform similarity search
-            docs = self.vector_store.similarity_search_with_score(query, k=k)
-            
+            docs = self.vector_store.similarity_search_with_relevance_scores(query, k=k)
             # Filter by threshold
             filtered_docs = [
                 doc for doc, score in docs 
@@ -121,11 +114,11 @@ class VectorStoreManager:
     def delete_documents(self, source: str) -> bool:
         """Delete documents from a specific source"""
         try:
-            # This is a limitation of current Chroma - we'd need to implement
-            # a more sophisticated deletion mechanism
-            logger.warning("Document deletion not fully implemented yet")
+            self.vector_store.delete(
+                where={"source": source}
+            )
+            logger.info(f"Deleted documents from source: {source}")
             return True
-            
         except Exception as e:
             logger.error(f"Failed to delete documents: {str(e)}")
             return False
@@ -133,7 +126,7 @@ class VectorStoreManager:
     def get_stats(self) -> Dict[str, Any]:
         """Get vector store statistics"""
         try:
-            collection = self.vector_store._collection
+            collection = self.vector_store.get()
             count = collection.count()
             
             return {
