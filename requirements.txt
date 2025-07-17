@@ -8,12 +8,20 @@ pandas
 # Vector and Embedding
 faiss-cpu==1.7.4
 sentence-transformers
-
+chromadb
+langchain-chroma
 # UI & App
 streamlit
 uvicorn
 httpx
-
+# Document Processing
+pypdf
+python-docx
+unstructured
+tiktoken
+# Enhanced text processing
+spacy
+nltk
 # Tools & Utilities
 python-dotenv
 pydantic

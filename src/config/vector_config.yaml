@@ -1,0 +1,14 @@
+vector_store:
+  provider: "chroma"  # or "faiss"
+  collection_name: "research_documents"
+  embedding_model: "all-MiniLM-L6-v2"
+  chunk_size: 1000
+  chunk_overlap: 200
+  
+storage:
+  persist_directory: "./data/vector_store"
+  
+retrieval:
+  top_k: 5
+  similarity_threshold: 0.7
+  rerank: true

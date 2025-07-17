@@ -2,3 +2,18 @@ tools:
   enable_wikipedia: true
   enable_tavily: true
   enable_arxiv: true
+  enable_rag: true
+
+vector_store:
+  provider: "chroma"
+  collection_name: "research_documents"
+  embedding_model: "all-MiniLM-L6-v2"
+  chunk_size: 1000
+  chunk_overlap: 200
+  persist_directory: "./data/vector_store"
+  
+  retrieval:
+    top_k: 5
+    similarity_threshold: 0.7
+    max_context_tokens: 4000
+    rerank: true
