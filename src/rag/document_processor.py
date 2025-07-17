@@ -4,7 +4,7 @@ from typing import List, Dict, Any
 from pathlib import Path
 import tiktoken
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import Document
+from langchain_core.documents import Document
 import PyPDF2
 import docx
 from bs4 import BeautifulSoup

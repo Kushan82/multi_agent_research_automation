@@ -1,8 +1,8 @@
 import os
 from typing import List, Dict, Any, Optional
 from langchain.schema import Document
-from langchain.embeddings import SentenceTransformerEmbeddings
-from langchain.vectorstores import Chroma
+from langchain_community.embeddings import SentenceTransformerEmbeddings
+from langchain_community.vectorstores import Chroma
 from langchain.vectorstores.base import VectorStore
 import chromadb
 from chromadb.config import Settings
