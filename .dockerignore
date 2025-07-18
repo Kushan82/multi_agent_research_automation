@@ -1,12 +1,49 @@
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Logs
 *.log
+logs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment files
 .env
-.venv
-.git
-.idea
-*.zip
-*.tar
-*.gz
+.env.local
+.env.*.local
+
+# Node modules (if any)
+node_modules/
+
+# Test coverage
+.coverage
+htmlcov/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
