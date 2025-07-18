@@ -124,6 +124,9 @@ if submitted and query.strip():
         # Display RAG response
         st.subheader("📄 RAG Response")
         st.markdown(result["output"])
+        if not rag_only and result.get("memory_output"):
+            with st.expander("🧠 Memory Context Analysis"):
+                st.markdown(result["memory_output"])
         
         # Show context info
         if result.get("context_used"):
@@ -135,6 +138,9 @@ if submitted and query.strip():
         if debug_mode and result.get("debug"):
             with st.expander("🔍 RAG Debug Info"):
                 st.json(result["debug"])
+        if debug_mode and result.get("memory_debug"):
+            with st.expander("🧠 Memory Debug Info"):
+                st.json(result["memory_debug"])
     
     else:
         # Full workflow mode
