@@ -32,13 +32,19 @@ class RAGAgent:
                 if documents:
                     all_documents.extend(documents)
                     processed_files.append(file_path)
+                    logger.info(f"Processed {len(documents)} chunks from {file_path}")
                 else:
                     failed_files.append(file_path)
+                    logger.warning(f"Failed to process {file_path}")
             
             # Add to vector store
             if all_documents:
                 document_ids = self.vector_store.add_documents(all_documents)
                 logger.info(f"Successfully ingested {len(all_documents)} chunks from {len(processed_files)} files")
+                
+                # Verify ingestion
+                stats = self.vector_store.get_stats()
+                logger.info(f"Vector store now contains {stats.get('total_documents', 0)} documents")
             
             return {
                 "success": True,
@@ -71,8 +77,10 @@ class RAGAgent:
                 if documents:
                     all_documents.extend(documents)
                     processed_urls.append(url)
+                    logger.info(f"Processed {len(documents)} chunks from {url}")
                 else:
                     failed_urls.append(url)
+                    logger.warning(f"Failed to process {url}")
             
             # Add to vector store
             if all_documents:
@@ -101,6 +109,16 @@ class RAGAgent:
         start = time.time()
         
         try:
+            # First, check if we have any documents
+            stats = self.vector_store.get_stats()
+            total_docs = stats.get("total_documents", 0)
+            
+            if total_docs == 0:
+                logger.warning("No documents in vector store")
+                return self._fallback_response(query, debug, error="No documents in vector store")
+            
+            logger.info(f"Querying vector store with {total_docs} documents")
+            
             # Get relevant context from vector store
             context = self.vector_store.get_relevant_context(
                 query, 
@@ -109,7 +127,10 @@ class RAGAgent:
             
             if not context:
                 logger.warning("No relevant context found in vector store")
-                return self._fallback_response(query, debug)
+                # Try a test retrieval to see what's available
+                test_result = self.vector_store.test_retrieval(query)
+                logger.info(f"Test retrieval result: {test_result}")
+                return self._fallback_response(query, debug, error="No relevant context found")
             
             # Generate response with context
             prompt = self.rag_prompt_template.replace("{{context}}", context).replace("{{query}}", query)
@@ -121,7 +142,7 @@ class RAGAgent:
             
             return {
                 "output": response,
-                "context_used": bool(context),
+                "context_used": True,
                 "context_length": len(context),
                 "debug": {
                     "agent": "RAGAgent",
@@ -129,7 +150,9 @@ class RAGAgent:
                     "context": context[:1000] + "..." if len(context) > 1000 else context,
                     "prompt": prompt,
                     "output": response,
-                    "elapsed_time": elapsed
+                    "elapsed_time": elapsed,
+                    "total_docs_in_store": total_docs,
+                    "vector_store_stats": stats
                 } if debug else {}
             }
             
@@ -144,8 +167,12 @@ class RAGAgent:
         try:
             response = run_llm_prompt(fallback_prompt)
             
+            fallback_message = "[Fallback Response - No relevant documents found]"
+            if error:
+                fallback_message = f"[Fallback Response - Error: {error}]"
+            
             return {
-                "output": f"[Fallback Response - No relevant documents found]\n\n{response}",
+                "output": f"{fallback_message}\n\n{response}",
                 "context_used": False,
                 "context_length": 0,
                 "debug": {
@@ -154,7 +181,8 @@ class RAGAgent:
                     "fallback": True,
                     "error": error,
                     "prompt": fallback_prompt,
-                    "output": response
+                    "output": response,
+                    "vector_store_stats": self.vector_store.get_stats()
                 } if debug else {}
             }
             
@@ -168,10 +196,19 @@ class RAGAgent:
                     "agent": "RAGAgent",
                     "query": query,
                     "fallback": True,
-                    "error": str(e)
+                    "error": str(e),
+                    "vector_store_stats": self.vector_store.get_stats()
                 } if debug else {}
             }
     
     def get_vector_store_stats(self) -> Dict[str, Any]:
         """Get statistics about the vector store"""
         return self.vector_store.get_stats()
+    
+    def test_retrieval(self, query: str = "test") -> Dict[str, Any]:
+        """Test retrieval functionality"""
+        return self.vector_store.test_retrieval(query)
+    
+    def clear_vector_store(self) -> bool:
+        """Clear all documents from vector store"""
+        return self.vector_store.clear_all()
